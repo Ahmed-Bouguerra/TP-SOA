@@ -1,0 +1,872 @@
+{
+  "info": {
+    "name": "TP2 Bibliotheque",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET liste des livres (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "const r = pm.response.json();",
+              "pm.test('Format total/page/limit/data', () => { pm.expect(r).to.have.keys(['total','page','limit','data']); pm.expect(r.total).to.eql(3); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET filtre auteur=martin (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "pm.test('1 seul livre de Martin', () => pm.expect(pm.response.json().total).to.eql(1));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres?auteur=martin",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ],
+          "query": [
+            {
+              "key": "auteur",
+              "value": "martin"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET filtre disponible=true (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "pm.test('2 livres disponibles', () => pm.expect(pm.response.json().total).to.eql(2));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres?disponible=true",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ],
+          "query": [
+            {
+              "key": "disponible",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET tri annee desc (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "pm.test('Le plus recent en premier', () => pm.expect(pm.response.json().data[0].annee).to.eql(2008));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres?sort=annee&order=desc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ],
+          "query": [
+            {
+              "key": "sort",
+              "value": "annee"
+            },
+            {
+              "key": "order",
+              "value": "desc"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET pagination page=2&limit=2 (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "const r = pm.response.json();",
+              "pm.test('1 element en page 2', () => { pm.expect(r.data.length).to.eql(1); pm.expect(r.page).to.eql(2); pm.expect(r.limit).to.eql(2); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres?page=2&limit=2",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "2"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET parametre invalide sort=xyz (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres?sort=xyz",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ],
+          "query": [
+            {
+              "key": "sort",
+              "value": "xyz"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET livre 1 (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "pm.test('id = 1', () => pm.expect(pm.response.json().id).to.eql(1));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET livre 999 (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "999"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST creer un livre (201)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 201', () => pm.response.to.have.status(201));",
+              "const l = pm.response.json();",
+              "pm.collectionVariables.set('livreId', l.id);",
+              "pm.test('Header Location', () => pm.expect(pm.response.headers.get('Location')).to.eql('/api/livres/' + l.id));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"Refactoring\",\n  \"auteur\": \"Martin Fowler\",\n  \"annee\": 2018,\n  \"isbn\": \"9780134757599\",\n  \"disponible\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST titre vide (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 400', () => pm.response.to.have.status(400));",
+              "pm.test('Liste erreurs', () => pm.expect(pm.response.json().erreurs).to.be.an('array').that.is.not.empty);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"\",\n  \"auteur\": \"X\",\n  \"annee\": 2000,\n  \"isbn\": \"111\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST annee invalide (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"T\",\n  \"auteur\": \"A\",\n  \"annee\": 1200,\n  \"isbn\": \"222\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST isbn manquant (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"T\",\n  \"auteur\": \"A\",\n  \"annee\": 2000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "POST isbn deja existant (409)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 409', () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"Copie\",\n  \"auteur\": \"A\",\n  \"annee\": 2008,\n  \"isbn\": \"9780132350884\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PUT remplacer le livre cree (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "pm.test('Titre remplace', () => pm.expect(pm.response.json().titre).to.eql('Refactoring 2e edition'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"Refactoring 2e edition\",\n  \"auteur\": \"Martin Fowler\",\n  \"annee\": 2018,\n  \"isbn\": \"9780134757599\",\n  \"disponible\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PUT corps incomplet (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"Seulement un titre\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PUT livre inexistant (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "999"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"Refactoring\",\n  \"auteur\": \"Martin Fowler\",\n  \"annee\": 2018,\n  \"isbn\": \"9780134757599\",\n  \"disponible\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PUT isbn d un autre livre (409)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 409', () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titre\": \"Refactoring\",\n  \"auteur\": \"Martin Fowler\",\n  \"annee\": 2018,\n  \"isbn\": \"9780132350884\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH modifier disponible (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 200', () => pm.response.to.have.status(200));",
+              "const l = pm.response.json();",
+              "pm.test('Modif partielle', () => { pm.expect(l.disponible).to.eql(false); pm.expect(l.auteur).to.eql('Martin Fowler'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"disponible\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH annee invalide (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"annee\": 1200\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PATCH livre inexistant (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/livres/999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "999"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"disponible\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DELETE supprimer le livre cree (204)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "DELETE deja supprime (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET livre supprime (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Code 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/livres/{{livreId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "livres",
+            "{{livreId}}"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "livreId",
+      "value": ""
+    }
+  ]
+}

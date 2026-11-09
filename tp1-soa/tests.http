@@ -1,0 +1,74 @@
+### Extension VS Code : REST Client (cliquer sur "Send Request" au-dessus de chaque requête)
+@base = http://localhost:3000
+
+### Accueil
+GET {{base}}/
+
+### Hello World
+GET {{base}}/api/hello
+
+### Hello nom (fr par défaut)
+GET {{base}}/api/hello/Amal
+
+### Hello en anglais
+GET {{base}}/api/hello/Amal?lang=en
+
+### Hello en arabe
+GET {{base}}/api/hello/Amal?lang=ar
+
+### Hello langue invalide (400)
+GET {{base}}/api/hello/Amal?lang=de
+
+### Date
+GET {{base}}/api/date
+
+### Route inconnue (404)
+GET {{base}}/api/xyz
+
+### Echo (POST JSON)
+POST {{base}}/api/echo
+Content-Type: application/json
+
+{ "nom": "Amal", "age": 20 }
+
+### Echo avec JSON invalide (400)
+POST {{base}}/api/echo
+Content-Type: application/json
+
+{ nom: invalide
+
+### Calc add (200)
+GET {{base}}/api/calc?op=add&a=5&b=3
+
+### Calc sub (200)
+GET {{base}}/api/calc?op=sub&a=5&b=3
+
+### Calc mul (200)
+GET {{base}}/api/calc?op=mul&a=4&b=2.5
+
+### Calc div (200)
+GET {{base}}/api/calc?op=div&a=10&b=4
+
+### Calc a manquant (400)
+GET {{base}}/api/calc?op=add&b=3
+
+### Calc non numérique (400)
+GET {{base}}/api/calc?op=add&a=abc&b=3
+
+### Calc opération inconnue (400)
+GET {{base}}/api/calc?op=pow&a=2&b=3
+
+### Calc division par zéro (400)
+GET {{base}}/api/calc?op=div&a=5&b=0
+
+### Calc POST (200)
+POST {{base}}/api/calc
+Content-Type: application/json
+
+{ "op": "mul", "a": 4, "b": 2.5 }
+
+### Calc POST erreur (400)
+POST {{base}}/api/calc
+Content-Type: application/json
+
+{ "op": "div", "a": 4, "b": 0 }
